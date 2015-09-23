@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:head>
+	<meta charset="UTF-8" />
+	<title>Compras</title>
+
+	<h:outputStylesheet library="css" name="estilo.css" />
+</h:head>
+
+<h:body>
+	<f:metadata>
+		<f:viewAction action="#{cadastroFornecedoresBean.inicializar}"/>
+	</f:metadata>
+
+	<header>
+		<div style="float: left">
+			<h:graphicImage library="imagens" name="logo-algaworks.png" />
+		</div>
+	</header>
+	
+	<h:form id="frm">
+		<p:messages autoUpdate="true"></p:messages>
+		
+		<div id="conteudo">
+			<h:panelGrid columns="2" style="margin-bottom:10px; margin-left: 10px" cellpadding="5">
+				<p:outputLabel value="Nome" for="nome" />
+				<p:inputText size="30" id="nome" value="#{cadastroFornecedoresBean.fornecedor.nome}" />
+				
+				<p:outputLabel value="Telefone" for="telefone" />
+				<p:inputText size="15" id="telefone" value="#{cadastroFornecedoresBean.fornecedor.telefone}" />
+				
+				<p:outputLabel for="estado" value="Estado" />
+		        <p:selectOneMenu id="estado" style="width:150px" value="#{cadastroFornecedoresBean.estado}">
+		        	<p:ajax listener="#{cadastroFornecedoresBean.onEstadoChange}" update="cidade"/>
+			        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true"/>
+			        <f:selectItems value="#{cadastroFornecedoresBean.todosEstados}" var="estado" 
+			        	itemLabel="#{estado.nome}" itemValue="#{estado}"></f:selectItems>
+		        </p:selectOneMenu>
+		        
+		        <p:outputLabel for="cidade" value="Cidade" />
+		        <p:selectOneMenu id="cidade" style="width:150px" value="#{cadastroFornecedoresBean.fornecedor.cidade}">
+		            <f:selectItem itemLabel="Selecione" itemValue="" />
+		            <f:selectItems value="#{cadastroFornecedoresBean.cidadesPorEstado}" var="cidade" 
+			        	itemLabel="#{cidade.nome}" itemValue="#{cidade}"></f:selectItems>
+		        </p:selectOneMenu>
+				
+				<p:outputLabel></p:outputLabel>
+				<p:commandButton value="Cadastrar" icon="fa fa-save"
+					id="botao-cadastrar" update="frm"
+					action="#{cadastroFornecedoresBean.cadastrar}" />
+			</h:panelGrid>
+			
+			<br/>
+			
+			<p:dataTable value="#{cadastroFornecedoresBean.todosFornecedores}" var="fornecedor" 
+					style="margin-top: 20px" emptyMessage="Nenhum fornecedor cadastrado.">
+				<p:column headerText="Nome" style="text-align: center;">
+					<h:outputText value="#{fornecedor.nome}"/>
+				</p:column>
+				
+				<p:column headerText="Telefone" style="text-align: center;">
+					<h:outputText value="#{fornecedor.telefone}" />
+				</p:column>
+				
+				<p:column headerText="Cidade/Estado" style="text-align: center;">
+					<h:outputText value="#{fornecedor.cidade.nome}/#{fornecedor.cidade.estado.sigla}" />
+				</p:column>
+				
+			</p:dataTable>
+		</div>
+	</h:form>
+</h:body>
+</html>
